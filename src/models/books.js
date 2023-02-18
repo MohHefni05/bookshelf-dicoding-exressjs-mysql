@@ -1,13 +1,13 @@
 const dbPool = require('../config/database');
 
 const getAllBooks = () => {
-  querySQL = `SELECT * FROM books`;
+  const querySQL = `SELECT * FROM books`;
   return dbPool.execute(querySQL);
 };
 
 const searchBook = (name = '', finished = '', reading = '') => {
   console.log(name, finished, reading);
-  querySQL = `SELECT * FROM books WHERE name LIKE '%${name}%' AND reading LIKE '%${reading}%' AND finished LIKE '%${finished}%'`;
+  const querySQL = `SELECT * FROM books WHERE name LIKE '%${name}%' AND reading LIKE '%${reading}%' AND finished LIKE '%${finished}%'`;
   return dbPool.execute(querySQL);
 };
 
@@ -16,4 +16,19 @@ const createNewBook = (id, body, finished, insertedAt, updatedAt) => {
   return dbPool.execute(querySQL);
 };
 
-module.exports = { getAllBooks, createNewBook, searchBook };
+const getBookById = (idBook) => {
+  const querySQL = `SELECT * FROM books WHERE id='${idBook}'`;
+  return dbPool.execute(querySQL);
+};
+
+const updateBookById = (idBook, body, finished, updatedAt) => {
+  const querySQL = `UPDATE books SET name = '${body.name}', year = ${body.year}, author = '${body.author}', summary = '${body.summary}', publisher = '${body.publisher}', pageCount = ${body.pageCount}, readPage = ${body.readPage}, finished = ${finished}, reading = ${body.reading}, updatedAt = '${updatedAt}' WHERE id='${idBook}'`;
+  return dbPool.execute(querySQL);
+};
+module.exports = {
+  getAllBooks,
+  createNewBook,
+  searchBook,
+  getBookById,
+  updateBookById,
+};

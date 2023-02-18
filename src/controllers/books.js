@@ -63,4 +63,67 @@ const createNewBook = async (req, res) => {
   }
 };
 
-module.exports = { getAllBooks, createNewBook };
+const getBookById = async (req, res) => {
+  const { idBook } = req.params;
+  try {
+    const [data] = await bookModels.getBookById(idBook);
+    if (data.length > 0) {
+      return res.json({
+        message: 'Mengambil Buku sukses',
+        data: data,
+      });
+    }
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Buku tidak ditemukan',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Gagal mendapatkan buku',
+      serverMessage: error,
+    });
+  }
+};
+
+const updateBookById = async (req, res) => {
+  const { idBook } = req.params;
+  const { body } = req;
+  const finished = body.pageCount === body.readPage;
+  const updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  try {
+    const [data] = await bookModels.getBookById(idBook);
+    if (data.length > 0) {
+      if (body.name === undefined) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Gagal mengubah buku buku. Mohon isi nama buku',
+        });
+      }
+
+      if (body.readPage > body.pageCount) {
+        return res.status(400).json({
+          status: 'fail',
+          message:
+            'Gagal mengubah buku. readPage tidak boleh lebih besar dari pageCount',
+        });
+      }
+      await bookModels.updateBookById(idBook, body, finished, updatedAt);
+      return res.status(201).json({
+        message: 'Sukses mengubah buku',
+        data: {
+          id: idBook,
+        },
+      });
+    }
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Buku tidak ditemukan',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Gagal mengubah buku',
+      serverMessage: error,
+    });
+  }
+};
+module.exports = { getAllBooks, createNewBook, getBookById, updateBookById };
