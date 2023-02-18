@@ -2,12 +2,20 @@ const bookModels = require('../models/books');
 const { nanoid } = require('nanoid');
 
 const getAllBooks = async (req, res) => {
-  const insertedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const { name, finished, reading } = req.query;
+  console.log(name, finished, reading);
   try {
-    const [data] = await bookModels.getAllBooks();
+    [data] = await bookModels.getAllBooks();
+    if (name || finished || reading) {
+      [data] = await bookModels.searchBook(name, finished, reading);
+    }
     return res.json({
       message: 'Sukses menampilkan semua buku',
-      data: data,
+      data: data.map((book) => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      })),
     });
   } catch (error) {
     return res.status(500).json({
