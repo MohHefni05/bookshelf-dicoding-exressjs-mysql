@@ -25,10 +25,17 @@ const updateBookById = (idBook, body, finished, updatedAt) => {
   const querySQL = `UPDATE books SET name = '${body.name}', year = ${body.year}, author = '${body.author}', summary = '${body.summary}', publisher = '${body.publisher}', pageCount = ${body.pageCount}, readPage = ${body.readPage}, finished = ${finished}, reading = ${body.reading}, updatedAt = '${updatedAt}' WHERE id='${idBook}'`;
   return dbPool.execute(querySQL);
 };
+
+const deleteBookById = (idBook) => {
+  const querySQL = `DELETE FROM books WHERE id='${idBook}'`;
+  return dbPool.execute(querySQL);
+};
+
 module.exports = {
   getAllBooks,
   createNewBook,
   searchBook,
   getBookById,
   updateBookById,
+  deleteBookById,
 };
