@@ -31,6 +31,7 @@ const createNewBook = async (req, res) => {
   const finished = body.pageCount === body.readPage;
   const insertedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const updatedAt = insertedAt;
+  const fileName = req.file.filename;
 
   if (body.name === undefined) {
     return res.status(400).json({
@@ -47,7 +48,14 @@ const createNewBook = async (req, res) => {
     });
   }
   try {
-    await bookModels.createNewBook(id, body, finished, insertedAt, updatedAt);
+    await bookModels.createNewBook(
+      id,
+      body,
+      finished,
+      fileName,
+      insertedAt,
+      updatedAt
+    );
     return res.status(201).json({
       message: 'Sukses menambahkan buku',
       data: {

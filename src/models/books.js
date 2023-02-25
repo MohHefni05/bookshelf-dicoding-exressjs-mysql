@@ -11,8 +11,8 @@ const searchBook = (name = '', finished = '', reading = '') => {
   return dbPool.execute(querySQL);
 };
 
-const createNewBook = (id, body, finished, insertedAt, updatedAt) => {
-  const querySQL = `INSERT INTO books (id, name, year, author, summary, publisher, pageCount, readPage, finished, reading, insertedAt, updatedAt) VALUES ('${id}', '${body.name}', '${body.year}', '${body.author}', '${body.summary}', '${body.publisher}', ${body.pageCount}, ${body.readPage}, ${finished}, ${body.reading}, '${insertedAt}', '${updatedAt}')`;
+const createNewBook = (id, body, finished, fileName, insertedAt, updatedAt) => {
+  const querySQL = `INSERT INTO books (id, name, year, author, summary, publisher, pageCount, readPage, finished, reading, photo ,insertedAt, updatedAt) VALUES ('${id}', '${body.name}', '${body.year}', '${body.author}', '${body.summary}', '${body.publisher}', ${body.pageCount}, ${body.readPage}, ${finished}, ${body.reading}, '${fileName}','${insertedAt}', '${updatedAt}')`;
   return dbPool.execute(querySQL);
 };
 
