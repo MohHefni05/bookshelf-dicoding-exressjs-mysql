@@ -1,9 +1,9 @@
 const bookModels = require('../models/books');
 const { nanoid } = require('nanoid');
+const fs = require('fs');
 
 const getAllBooks = async (req, res) => {
   const { name, finished, reading } = req.query;
-  console.log(name, finished, reading);
   try {
     [data] = await bookModels.getAllBooks();
     if (name || finished || reading) {
