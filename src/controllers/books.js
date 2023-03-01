@@ -141,12 +141,26 @@ const deleteBookById = async (req, res) => {
     const [data] = await bookModels.getBookById(idBook);
     if (data.length > 0) {
       await bookModels.deleteBookById(idBook);
-      return res.status(201).json({
+      const message = res.status(201).json({
         message: 'Sukses menghapus buku',
         data: {
           id: idBook,
         },
       });
+      fs.stat(
+        './public/images/' + data.map((book) => book.photo),
+        function (err, stat) {
+          if (err == null) {
+            fs.unlinkSync('./public/images/' + data.map((book) => book.photo));
+            return message;
+          } else if (err.code === 'ENOENT') {
+            // file does not exist
+            return message;
+          } else {
+            console.log('Some other error: ', err.code);
+          }
+        }
+      );
     }
     return res.status(404).json({
       status: 'fail',
